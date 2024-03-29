@@ -1,7 +1,6 @@
 /*!
  * Bootstrap v3.3.2 (http://getbootstrap.com)
  */
-
 if (typeof jQuery === 'undefined') {
   throw new Error('Bootstrap\'s JavaScript requires jQuery')
 }
