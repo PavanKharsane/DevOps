@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Linux → AWS (EC2 & S3) — Syllabus & Guide</title>
+  <meta name="description" content="Comprehensive static syllabus and reference from Linux basics through AWS EC2 and S3, with examples and a contact form." />
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --muted:#9aa5b1; --accent:#6ee7b7; --glass:rgba(255,255,255,0.03);
+      --mono:'SFMono-Regular',ui-monospace,monospace;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:linear-gradient(180deg,#041027 0%, #071129 60%); color:#e6eef6; line-height:1.5}
+    header{display:flex;align-items:center;gap:16px;padding:28px;max-width:1100px;margin:0 auto}
+    .logo{width:76px;height:76px;background:linear-gradient(135deg,#4ade80,#06b6d4);border-radius:18px;display:grid;place-items:center;color:#042023;font-weight:700;font-size:22px}
+    h1{margin:0;font-size:22px}
+    p.lead{margin:6px 0 0;color:var(--muted)}
+    main{max-width:1100px;margin:18px auto;padding:24px}
+    .grid{display:grid;grid-template-columns:1fr 360px;gap:20px}
+    .card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 20px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.02)}
+    nav.toc{position:sticky;top:18px}
+    .toc h3{margin:0 0 8px}
+    .toc a{display:block;padding:8px;border-radius:8px;color:var(--muted);text-decoration:none;margin-bottom:6px}
+    .toc a:hover{color:var(--accent);background:var(--glass)}
+    section h2{margin-top:0}
+    .section-meta{color:var(--muted);font-size:14px;margin-bottom:12px}
+    pre{background:#020617;padding:12px;border-radius:8px;overflow:auto;font-family:var(--mono);font-size:13px;color:#dbeafe}
+    code{font-family:var(--mono);font-size:13px}
+    .badge{display:inline-block;padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.04);color:var(--muted);font-size:13px;margin-right:8px}
+    .accordion{border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.03)}
+    .acc-item{border-bottom:1px solid rgba(255,255,255,0.02)}
+    .acc-btn{width:100%;text-align:left;padding:14px 16px;background:transparent;border:0;color:inherit;display:flex;justify-content:space-between;align-items:center;font-weight:600}
+    .acc-panel{padding:12px 16px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent)}
+    footer{max-width:1100px;margin:18px auto;padding:18px;color:var(--muted);font-size:14px}
+    .cartoon{width:100%;height:140px;background:linear-gradient(90deg,#083246,#07304a);border-radius:12px;display:flex;align-items:center;justify-content:center}
+    .cartoon svg{width:120px;height:120px;opacity:0.95}
+    .copy-btn{border:0;background:transparent;color:var(--accent);cursor:pointer}
+    .top-actions{display:flex;gap:8px;align-items:center}
+    input, textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    button.primary{background:linear-gradient(90deg,#06b6d4,#4ade80);border:0;padding:10px 14px;border-radius:10px;color:#042023;font-weight:700;cursor:pointer}
+    @media (max-width:980px){.grid{grid-template-columns:1fr;}.toc{position:static}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">L→AWS</div>
+    <div>
+      <h1>Linux → AWS Syllabus (Linux basics through EC2 & S3)</h1>
+      <p class="lead">A compact, static learning webpage with theory, commands, examples, and quick labs — ready to copy and host.</p>
+    </div>
+    <div style="margin-left:auto" class="top-actions">
+      <button class="primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Contact</button>
+      <button class="badge" onclick="toggleTheme()">Toggle Theme</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="grid">
+      <div>
+        <div class="card">
+          <section id="linux">
+            <h2>1. Linux — Foundations</h2>
+            <div class="section-meta">Key topics: CLI, filesystem, permissions, processes, networking, package management, shell scripting</div>
+            <div class="accordion">
+              <div class="acc-item">
+                <button class="acc-btn" onclick="toggleAcc(this)">Basics & CLI <span>▸</span></button>
+                <div class="acc-panel" style="display:none">
+                  <p><strong>Concepts:</strong> kernel vs userland, distributions (Ubuntu, CentOS, Amazon Linux, Debian), shell (bash, sh, zsh).</p>
+                  <p><strong>Important commands:</strong></p>
+                  <pre>pwd            # print working directory
+ls -la         # list files with details
+cd /path       # change directory
+cat file.txt   # view file
+less file.txt  # paginated view
+cp src dest    # copy
+mv src dest    # move/rename
+rm file        # remove file
+mkdir dir      # create directory
+rmdir dir      # remove directory (if empty)</pre>
+                  <p><strong>Permissions & Ownership:</strong></p>
+                  <pre>ls -l          # view permissions and owner
+chmod 644 file  # set file permissions
+chown user:grp file  # change owner and group</pre>
+                </div>
+              </div>
+
+              <div class="acc-item">
+                <button class="acc-btn" onclick="toggleAcc(this)">Filesystems & Disks <span>▸</span></button>
+                <div class="acc-panel" style="display:none">
+                  <p>Understand /, /home, /etc, /var, /tmp, /usr — mounting, fstab, partitions, df, du.</p>
+                  <pre>df -h           # disk free (human-readable)
+du -sh folder    # folder size
+mount /dev/xvdf /data   # mount device</pre>
+                </div>
+              </div>
+
+              <div class="acc-item">
+                <button class="acc-btn" onclick="toggleAcc(this)">Processes & Services <span>▸</span></button>
+                <div class="acc-panel" style="display:none">
+                  <pre>ps aux | grep process
+top               # interactive process viewer
+systemctl status httpd   # service management (systemd)
+sudo systemctl start|stop|restart <service>
+</pre>
+                </div>
+              </div>
+
+              <div class="acc-item">
+                <button class="acc-btn" onclick="toggleAcc(this)">Networking & SSH <span>▸</span></button>
+                <div class="acc-panel" style="display:none">
+                  <p>IP tools: ip, ifconfig (legacy), ss, netstat. SSH basics and key-based auth.</p>
+                  <pre># check ip
+ip addr show
+
+# ssh into server
+ssh -i /path/key.pem ec2-user@ec2-public-ip
+
+# copy file via scp
+scp -i key.pem file.txt ec2-user@host:/home/ec2-user/
+</pre>
+                </div>
+              </div>
+
+              <div class="acc-item">
+                <button class="acc-btn" onclick="toggleAcc(this)">Shell Scripting <span>▸</span></button>
+                <div class="acc-panel" style="display:none">
+                  <p>Write repeatable tasks in scripts. Basic template:</p>
+                  <pre>#!/bin/bash
+set -euo pipefail
+
+# Example: backup a folder
+src="/home/ubuntu/data"
+dest="/backup/$(date +%F).tar.gz"
+tar -czf "$dest" "$src"
+</pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section id="aws-basics" style="margin-top:18px">
+            <h2>2. AWS Basics</h2>
+            <div class="section-meta">Core cloud concepts, regions, availability zones, shared responsibility model</div>
+            <p><strong>Cloud fundamentals:</strong> cloud = on-demand compute, storage, networking. Key benefits: elasticity, scalability, pay-as-you-go.</p>
+            <p><strong>Regions & AZs:</strong> AWS divides the world into Regions (e.g., us-east-1) and AZs (e.g., us-east-1a) for high availability.</p>
+            <p><strong>IAM (Identity & Access Management):</strong> principle of least privilege, users, groups, roles, policies, temporary creds (STS).</p>
+            <pre># example AWS CLI to get caller identity
+aws sts get-caller-identity
+</pre>
+          </section>
+
+          <section id="ec2" style="margin-top:18px">
+            <h2>3. EC2 — Elastic Compute Cloud</h2>
+            <div class="section-meta">Launch, connect, store, and secure virtual servers</div>
+            <div class="accordion">
+              <div class="acc-item">
+                <button class="acc-btn" onclick="toggleAcc(this)">Instance Types & AMIs <span>▸</span></button>
+                <div class="acc-panel" style="display:none">
+                  <p>Instance families: general purpose (t3/t4), compute-optimized (c5), memory-optimized (r5), storage-optimized. Choose based on workload.</p>
+                  <p>AMI — Amazon Machine Image (e.g., Amazon Linux 2, Ubuntu). AMI contains OS and initial config.</p>
+                </div>
+              </div>
+
+              <div class="acc-item">
+                <button class="acc-btn" onclick="toggleAcc(this)">Launch & Connect <span>▸</span></button>
+                <div class="acc-panel" style="display:none">
+                  <pre># quick AWS CLI example to launch (simplified)
+aws ec2 run-instances \
+  --image-id ami-0abcdef1234567890 \
+  --instance-type t3.micro \
+  --key-name my-key \
+  --security-group-ids sg-0123456789abcdef0 \
+  --subnet-id subnet-0abc12345
+
+# connect (ssh)
+ssh -i my-key.pem ec2-user@{PUBLIC_IP}
+</pre>
+                  <p><strong>Security groups:</strong> act as virtual firewall. Open only required ports (22 for SSH, 80/443 for web).</p>
+                </div>
+              </div>
+
+              <div class="acc-item">
+                <button class="acc-btn" onclick="toggleAcc(this)">Storage: EBS & EFS <span>▸</span></button>
+                <div class="acc-panel" style="display:none">
+                  <p><strong>EBS:</strong> block storage, attach to one instance (unless using multi-attach). Snapshots for backups.</p>
+                  <p><strong>EFS:</strong> shared file system (NFS) for multiple instances.</p>
+                  <pre># create snapshot
+aws ec2 create-snapshot --volume-id vol-0123456789abcdef0 --description "backup"
+</pre>
+                </div>
+              </div>
+
+              <div class="acc-item">
+                <button class="acc-btn" onclick="toggleAcc(this)">Networking (VPC, Subnets, IGW) <span>▸</span></button>
+                <div class="acc-panel" style="display:none">
+                  <p>VPC isolates your cloud network. Subnets can be public (with Internet Gateway) or private. Use NAT Gateway for outbound internet from private subnets.</p>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section id="s3" style="margin-top:18px">
+            <h2>4. S3 — Simple Storage Service</h2>
+            <div class="section-meta">Object storage: buckets, objects, versioning, policies, lifecycle, encryption</div>
+            <p><strong>Core concepts:</strong> S3 stores objects in buckets. Objects have keys and metadata. S3 is region-specific and provides strong durability.</p>
+            <div class="accordion">
+              <div class="acc-item">
+                <button class="acc-btn" onclick="toggleAcc(this)">Buckets & Objects <span>▸</span></button>
+                <div class="acc-panel" style="display:none">
+                  <pre># create a bucket (example)
+aws s3api create-bucket --bucket my-example-bucket --region us-east-1
+
+# upload file
+aws s3 cp file.txt s3://my-example-bucket/folder/file.txt
+
+# list objects
+aws s3 ls s3://my-example-bucket --recursive
+</pre>
+                </div>
+              </div>
+
+              <div class="acc-item">
+                <button class="acc-btn" onclick="toggleAcc(this)">Versioning, Policies & ACLs <span>▸</span></button>
+                <div class="acc-panel" style="display:none">
+                  <p>Enable versioning to protect from accidental deletes. Use bucket policies or IAM to control access; prefer IAM roles over ACLs.</p>
+                  <pre># enable versioning
+aws s3api put-bucket-versioning --bucket my-example-bucket --versioning-configuration Status=Enabled
+</pre>
+                </div>
+              </div>
+
+              <div class="acc-item">
+                <button class="acc-btn" onclick="toggleAcc(this)">Lifecycle & Costs <span>▸</span></button>
+                <div class="acc-panel" style="display:none">
+                  <p>Lifecycle rules move objects to cheaper storage (GLACIER/DEEP_ARCHIVE) or expire them after X days to save cost.</p>
+                  <pre>{
+  "Rules": [{
+    "ID":"MoveToIA",
+    "Status":"Enabled",
+    "Filter":{ "Prefix":"logs/" },
+    "Transitions":[{"Days":30,"StorageClass":"STANDARD_IA"}]
+  }]
+}</pre>
+                </div>
+              </div>
+
+              <div class="acc-item">
+                <button class="acc-btn" onclick="toggleAcc(this)">Security & Encryption <span>▸</span></button>
+                <div class="acc-panel" style="display:none">
+                  <p>S3 supports server-side encryption (SSE-S3, SSE-KMS), client-side encryption, and bucket policies to enforce HTTPS and encryption.</p>
+                  <pre># enforce TLS using policy (example snippet)
+# Use bucket policies to deny requests that are not using SecureTransport
+</pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section id="aws-cli" style="margin-top:18px">
+            <h2>5. AWS CLI & Automation</h2>
+            <p class="section-meta">Install, configure, and run common commands</p>
+            <pre># install (linux)
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+# configure
+aws configure
+# Provide AWS Access Key ID, Secret, region, output format
+</pre>
+            <p><strong>Tips:</strong> Use IAM roles for EC2, avoid embedding long-term keys in code, use named profiles for multiple accounts.</p>
+          </section>
+
+          <section id="practical-labs" style="margin-top:18px">
+            <h2>6. Practical Labs & Mini Projects</h2>
+            <div class="section-meta">Hands-on tasks to reinforce learning</div>
+            <ul>
+              <li>Linux: Build a bash script that rotates logs, compresses them, and moves to /backup.</li>
+              <li>EC2: Launch an EC2 instance, host a simple Nginx site, attach an EBS volume, and snapshot it.</li>
+              <li>S3: Host a static website using S3, set up bucket policy for public read (or CloudFront for secure delivery).</li>
+              <li>Automation: Create a small Terraform script (or CloudFormation) that provisions EC2 + Security Group + S3 bucket.</li>
+            </ul>
+          </section>
+
+          <section id="resources" style="margin-top:18px">
+            <h2>7. Resources & Further Reading</h2>
+            <p>Official docs (always preferred): AWS Documentation, Linux man pages, and community tutorials. Recommended topics: IAM deep dive, VPC fundamentals, EBS & Snapshot lifecycle, S3 security best practices.</p>
+            <p class="section-meta">Cheat sheet & quick commands are provided throughout this page.</p>
+          </section>
+
+        </div>
+
+        <div class="card" style="margin-top:18px">
+          <h2>Quick Reference — Commands</h2>
+          <pre># Linux
+sudo apt update && sudo apt upgrade -y
+sudo yum update -y
+
+# SSH key
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/mykey
+
+# AWS
+aws s3 cp file.txt s3://bucket-name/
+aws ec2 describe-instances
+</pre>
+        </div>
+
+      </div>
+
+      <aside class="toc card" aria-label="Sidebar">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div class="cartoon" title="Cartoon placeholder">
+            <!-- simple SVG cartoon -->
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none">
+              <rect width="64" height="64" rx="12" fill="#092b32" />
+              <g transform="translate(6,6)" fill="#6ee7b7">
+                <circle cx="18" cy="14" r="10" opacity="0.9" />
+                <rect x="6" y="30" width="24" height="12" rx="3" opacity="0.9" />
+              </g>
+            </svg>
+          </div>
+          <div>
+            <strong>Course</strong>
+            <div style="color:var(--muted);font-size:13px">From Linux basics → EC2 & S3</div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px">
+          <h3>On this page</h3>
+          <nav>
+            <a href="#linux">Linux — Foundations</a>
+            <a href="#aws-basics">AWS Basics</a>
+            <a href="#ec2">EC2</a>
+            <a href="#s3">S3</a>
+            <a href="#aws-cli">AWS CLI</a>
+            <a href="#practical-labs">Practical Labs</a>
+            <a href="#contact">Contact</a>
+          </nav>
+        </div>
+
+        <div style="margin-top:16px">
+          <h3>Search & Copy</h3>
+          <input id="search" placeholder="Search this page (e.g., 'versioning')" oninput="searchPage(this.value)" />
+          <div style="margin-top:8px;text-align:center">
+            <button class="copy-btn" onclick="copyAll()">Copy whole page HTML</button>
+          </div>
+        </div>
+
+        <div style="margin-top:18px">
+          <h3>Contact</h3>
+          <p style="color:var(--muted);font-size:13px;">Send feedback or request a customised version.</p>
+          <button class="primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Open form</button>
+        </div>
+      </aside>
+    </div>
+
+    <div id="contact" class="card" style="margin-top:18px">
+      <h2>Contact / Request Customization</h2>
+      <p class="section-meta">This form is static — it constructs a mailto: link with your input.</p>
+      <form onsubmit="handleContact(event)">
+        <label>Name</label>
+        <input id="name" required placeholder="Your name" />
+        <label style="margin-top:8px">Email</label>
+        <input id="email" type="email" required placeholder="you@example.com" />
+        <label style="margin-top:8px">Message</label>
+        <textarea id="message" rows="5" placeholder="Tell me what to customize..." required></textarea>
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <button class="primary" type="submit">Send Email</button>
+          <button type="button" class="badge" onclick="downloadHTML()">Download HTML</button>
+        </div>
+      </form>
+    </div>
+
+  </main>
+
+  <footer>
+    <div style="max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center">
+      <div>© Linux → AWS syllabus • Static single-file HTML • Customize freely</div>
+      <div style="color:var(--muted)">Tip: host on GitHub Pages or any static host</div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleAcc(btn){
+      const panel = btn.nextElementSibling;
+      const open = panel.style.display === 'block';
+      panel.style.display = open ? 'none' : 'block';
+      btn.querySelector('span').textContent = open ? '▸' : '▾';
+    }
+    function searchPage(q){
+      q = q.trim().toLowerCase();
+      if(!q) return;
+      const content = document.querySelectorAll('section');
+      content.forEach(sec=>{
+        const txt = sec.innerText.toLowerCase();
+        if(txt.includes(q)) sec.style.boxShadow = '0 0 0 3px rgba(110,231,183,0.08)';
+        else sec.style.boxShadow = 'none';
+      })
+    }
+    function copyAll(){
+      navigator.clipboard.writeText(document.documentElement.outerHTML).then(()=>alert('Page HTML copied to clipboard'))
+    }
+    function handleContact(e){
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+      const subject = encodeURIComponent('Customization request from ' + name);
+      const body = encodeURIComponent('From: '+name+' (%7C '+email+' %7C)\n\n'+message);
+      window.location.href = `mailto:you@example.com?subject=${subject}&body=${body}`;
+    }
+    function downloadHTML(){
+      const blob = new Blob([document.documentElement.outerHTML], {type:'text/html'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'linux-to-aws-syllabus.html';
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    }
+    function toggleTheme(){
+      document.body.classList.toggle('light');
+      if(document.body.classList.contains('light')){
+        document.documentElement.style.setProperty('--bg','#f7fafc');
+        document.documentElement.style.setProperty('--card','#ffffff');
+        document.documentElement.style.setProperty('--muted','#475569');
+      } else {
+        document.documentElement.style.removeProperty('--bg');
+        document.documentElement.style.removeProperty('--card');
+        document.documentElement.style.removeProperty('--muted');
+      }
+    }
+  </script>
+</body>
+</html>
